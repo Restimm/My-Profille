@@ -568,11 +568,19 @@ export default function Portfolio() {
       </footer>
 
       {/* NAVIGASI MENGAMBANG (kaca) */}
-      <nav aria-label="Navigasi" className="surface nav-blur fixed bottom-4 left-1/2 z-[36] flex max-w-[94vw] -translate-x-1/2 items-center gap-0.5 rounded-full p-1.5 text-[13px] sm:gap-1 sm:text-sm">
-        {[['#beranda', 'Beranda'], ['#karya', 'Karya'], ...(showExp ? [['#pengalaman', 'Pengalaman']] : []), ['#kontak', 'Kontak']].map(([href, label]) => (
-          <a key={href} href={href} className="rounded-full px-3 py-2 text-fg/75 transition-colors hover:bg-fg/10 hover:text-fg sm:px-4">{label}</a>
-        ))}
-      </nav>
+     <nav
+  aria-label="Navigasi"
+  style={{
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderImage: 'linear-gradient(to right, transparent, rgba(168, 85, 247, 0.6), transparent) 1'
+  }}
+  className="surface nav-blur fixed bottom-4 left-1/2 z-[36] flex max-w-[94vw] -translate-x-1/2 items-center gap-0.5 rounded-full p-1.5 text-[13px] sm:gap-1 sm:text-sm"
+>
+  {[['#beranda', 'Beranda'], ['#karya', 'Karya'], ...(showExp ? [['#pengalaman', 'Pengalaman']] : []), ['#kontak', 'Kontak']].map(([href, label]) => (
+    <a key={href} href={href} className="rounded-full px-3 py-2 text-fg/75 transition-colors hover:bg-fg/10 hover:text-fg sm:px-4">{label}</a>
+  ))}
+</nav>
 
       {/* DETAIL KARYA (gaya Behance) */}
       <AnimatePresence>
