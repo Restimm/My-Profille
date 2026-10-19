@@ -83,7 +83,7 @@ function Modal({ onClose, children, width = 520 }) {
 }
 
 const isEmail = (v) => /^\S+@\S+\.\S+$/.test(v);
-const fixUrl = (u) => (/^https?:\/\//i.test(u) ? u : `https://${u}`);
+const fixUrl = (u) => (/^(https?:\/\/|mailto:)/i.test(u) ? u : `https://${u}`);
 const emptyExp = () => ({ role: '', company: '', period: '', description: '' });
 const emptyWork = (cats) => ({ title: '', category: cats[0], description: '', cover: '', images: [], videos: [] });
 
