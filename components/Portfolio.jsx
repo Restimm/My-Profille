@@ -523,10 +523,9 @@ export default function Portfolio() {
         <div className="grid gap-6 md:grid-cols-2 md:gap-10">
           <Reveal className="surface min-w-0 rounded-3xl p-6 md:p-9">
             <h2 className="font-display text-2xl font-bold md:text-4xl">Kirim pesan</h2>
-            <p className="mt-3 max-w-md text-fg/65">Punya proyek atau pertanyaan? Tulis di sini. Kontak balasan boleh dikosongkan.</p>
+            <p className="mt-3 max-w-md text-fg/65">Punya proyek atau pertanyaan? Kirim pesan langsung ke saya.</p>
             <form onSubmit={submitMsg} className="mt-6 space-y-4">
               <input className="field" placeholder="Nama atau panggilan" value={msg.name} maxLength={80} required onChange={(e) => setMsg({ ...msg, name: e.target.value })} />
-              <input className="field" placeholder="Kontak balasan (opsional: WA, IG, atau email)" value={msg.contact} maxLength={120} onChange={(e) => setMsg({ ...msg, contact: e.target.value })} />
               <textarea className="field" rows={5} placeholder="Pesan" value={msg.message} maxLength={2000} required onChange={(e) => setMsg({ ...msg, message: e.target.value })} />
               {/* kolom jebakan bot, disembunyikan dari manusia */}
               <input tabIndex={-1} autoComplete="off" aria-hidden="true" value={msg.website} onChange={(e) => setMsg({ ...msg, website: e.target.value })} className="absolute left-[-9999px] h-0 w-0 opacity-0" />
