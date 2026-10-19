@@ -10,7 +10,7 @@ import { parseVideo, makePoster } from '../lib/video';
 
 const SOCIALS = [
   ['instagram', 'Instagram'], ['behance', 'Behance'], ['linkedin', 'LinkedIn'],
-  ['discord', 'Discord'], ['fiverr', 'Fiverr']
+  ['email', 'Email'], ['fiverr', 'Fiverr']
 ];
 
 const ease = [0.22, 1, 0.36, 1];
