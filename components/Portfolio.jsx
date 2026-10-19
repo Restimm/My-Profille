@@ -1,7 +1,7 @@
 'use client';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, MotionConfig, useScroll, useMotionValueEvent } from 'framer-motion';
-import Backdrop from './Backdrop';
+
 import {
   loadAll, saveData, uploadImage, sendLike, checkPassword, hasLiked,
   isRemote, sendMessage, listMessages, deleteMessage, uploadVideo
@@ -327,7 +327,7 @@ export default function Portfolio() {
     <MotionConfig reducedMotion="user">
       <DirCtx.Provider value={dir}>
       {/* latar bercahaya + efek cahaya arah scroll */}
-      <Backdrop />
+      
 
       {admin && (
         <div className="fixed inset-x-0 top-0 z-40 border-b border-neon/40 bg-bg/95 px-4 py-3">
@@ -484,7 +484,7 @@ export default function Portfolio() {
         <section id="pengalaman" className="mx-auto max-w-6xl scroll-mt-6 px-4 pb-20 sm:px-6 md:pb-24">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <h2 className="font-display text-2xl font-bold md:text-4xl">Pengalaman</h2>
+              <h2 className="font-display text-2xl font-bold md:text-4xl">Experience</h2>
               {admin && <button className="btn" onClick={() => setExpForm(emptyExp())}>+ Tambah Pengalaman</button>}
             </div>
           </Reveal>
