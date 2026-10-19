@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 0 0 0; --fg: 236 236 241; --card: 7 7 11;
+  --neon: 192 132 252; --plum: 147 51 234; --hot: 244 114 182; --danger: 255 122 144;
+
+  /* Warna dasar panel: hitam polos. Pekat, sehingga ular cahaya di belakang tertutup panel dan hanya terlihat di sela-selanya. */
+  --surface-base: rgb(0 0 0);
+
+
+  /* Garis tepi panel: gradasi violet -> fuksia -> rose (makin terang ke kanan bawah), tanpa glow */
+  --edge1: rgb(139 92 246 / .22); --edge2: rgb(168 85 247 / .55); --edge3: rgb(217 70 239 / .85); --edge4: rgb(251 113 133 / .95);
+  color-scheme: dark;
+}
+
+html { background: rgb(var(--bg)); scroll-behavior: smooth; }
+body { background: transparent; color: rgb(var(--fg)); font-family: var(--font-body), system-ui, sans-serif; overflow-x: hidden; }
+:focus-visible { outline: 2px solid rgb(var(--neon)); outline-offset: 2px; }
+h1, h2, h3 { letter-spacing: -.015em; }
+
+/* ===== Tombol dan kolom isian ===== */
+.btn { border-radius: 9999px; padding: .5rem 1.1rem; font-size: .875rem; font-weight: 600;
+  background: rgb(var(--fg)); color: rgb(var(--bg)); }
+.btn:disabled { opacity: .6; }
+.btn-ghost { border-radius: 9999px; padding: .5rem 1.1rem; font-size: .875rem; border: 1px solid rgb(var(--fg) / .22); color: rgb(var(--fg)); background: rgb(var(--bg) / .6); }
+.btn-ghost:hover { border-color: rgb(var(--neon)); }
+.btn-danger { border-radius: 9999px; padding: .5rem 1.1rem; font-size: .875rem; border: 1px solid rgb(var(--danger) / .7); color: rgb(var(--danger)); background: rgb(var(--bg) / .6); }
+.field { width: 100%; border-radius: .6rem; background: rgb(var(--fg) / .06); border: 1px solid rgb(var(--fg) / .18); padding: .6rem .8rem; color: rgb(var(--fg)); }
+.field:focus { outline: none; border-color: rgb(var(--neon) / .8); box-shadow: 0 0 0 3px rgb(var(--neon) / .15); }
+.editable { outline: 1px dashed rgb(var(--neon) / .7); outline-offset: 4px; border-radius: 4px; }
+.editable:focus { outline-style: solid; background: rgb(var(--neon) / .08); }
+
+/* ===== Teks berjalan dan pendaran latar ===== */
+.marquee { display: flex; width: max-content; animation: marq 32s linear infinite; }
+.outline-text { -webkit-text-stroke: 1px rgb(var(--fg) / .3); color: transparent; }
+.orb { animation: drift 24s ease-in-out infinite alternate; }
+@keyframes marq { to { transform: translateX(-50%); } }
+@keyframes drift { to { transform: translate3d(40px, 30px, 0) scale(1.1); } }
+
+/* ===== Panel hitam polos dengan garis border cahaya tipis, tanpa gambar, glow, dan blur =====
+   Lengkung sudut ikut kelas Tailwind (rounded-2xl, rounded-full, dst).
+   Blur hanya dipakai pada menu navigasi (.nav-blur), dan menu itu tidak punya border. */
+@layer components {
+  .surface {
+    position: relative;
+    background-color: var(--surface-base);
+  }
+  .surface-strong { box-shadow: 0 30px 80px -30px rgb(0 0 0 / .9); } /* bayangan gelap saja, bukan glow */
+
+  /* garis tepi tipis bergradasi */
+  .surface::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+    background: linear-gradient(135deg, var(--edge1), var(--edge2) 38%, var(--edge3) 68%, var(--edge4));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+
+  /* Menu navigasi: satu-satunya yang berblur, tembus pandang, dan tanpa border */
+  .nav-blur {
+    background-color: rgb(255 255 255 / .06);
+    -webkit-backdrop-filter: blur(6px) !important;
+    backdrop-filter: blur(6px) !important;
+  }
+  .nav-blur::before { display: none; }
+  @media (max-width: 768px) {
+    .nav-blur {
+      -webkit-backdrop-filter: blur(4px) !important;
+      backdrop-filter: blur(4px) !important;
+    }
+  }
+  html.lite .nav-blur {
+    -webkit-backdrop-filter: blur(3px) !important;
+    backdrop-filter: blur(3px) !important;
+  }
+
+  .surface-hover { transition: transform .45s cubic-bezier(.22, 1, .36, 1); }
+  .surface-hover:hover { transform: translateY(-3px); }
+}
+
+/* Mode hemat (perangkat lemah): tanpa animasi latar */
+html.lite .orb { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquee, .orb { animation: none; }
+  .surface-hover:hover { transform: none; }
+}
