@@ -27,7 +27,7 @@ const Reveal = ({ children, className = '', delay = 0 }) => {
     <motion.div
       className={className}
       variants={rv} custom={d} initial="hidden" whileInView="show"
-      viewport={{ once: false, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.6, ease, delay }}
     >
       {children}
@@ -443,7 +443,7 @@ export default function Portfolio() {
               <motion.article
                 layout key={w.id}
                 variants={rv} custom={dir} initial="hidden" whileInView="show"
-                viewport={{ once: false, amount: 0.15 }}
+                viewport={{ once: true, amount: 0.15 }}
                 exit={{ opacity: 0, scale: 0.94 }}
                 transition={{ duration: 0.5, ease }}
                 className="relative min-w-0"
