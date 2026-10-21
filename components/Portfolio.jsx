@@ -97,6 +97,10 @@ export default function Portfolio() {
   const [pwErr, setPwErr] = useState('');
   const [filter, setFilter] = useState('Semua');
   const [viewId, setViewId] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(5);
+  const [recentIds, setRecentIds] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('folio:recent') || '[]'); } catch { return []; }
+  });
   const [form, setForm] = useState(null);
   const [expForm, setExpForm] = useState(null);
   const [vidLink, setVidLink] = useState('');
@@ -319,7 +323,28 @@ export default function Portfolio() {
   const reps = Math.max(2, Math.ceil(8 / Math.max(items.length, 1)));
   const exps = data.experience || [];
   const showExp = admin || exps.length > 0;
-  const works = filter === 'Semua' ? data.works : data.works.filter((w) => w.category === filter);
+  const works = (() => {
+    const filtered = filter === 'Semua' ? data.works : data.works.filter((w) => w.category === filter);
+
+    // Hitung populasi tiap kategori (dari seluruh data.works)
+    const catCount = {};
+    data.works.forEach((w) => { catCount[w.category] = (catCount[w.category] || 0) + 1; });
+
+    // Pisahkan: karya recently-viewed (urut dari terbaru) vs sisanya
+    const recentSet = new Set(recentIds);
+    const recentWorks = recentIds
+      .map((id) => filtered.find((w) => w.id === id))
+      .filter(Boolean);
+    const restWorks = filtered
+      .filter((w) => !recentSet.has(w.id))
+      .sort((a, b) => (catCount[b.category] || 0) - (catCount[a.category] || 0));
+
+    return [...recentWorks, ...restWorks];
+  })();
+
+  const LOAD_STEP = 5;
+  const visibleWorks = works.slice(0, visibleCount);
+  const hasMore = visibleCount < works.length;
   const cur = data.works.find((w) => w.id === viewId);
   const shownSocials = SOCIALS.filter(([k]) => admin || p.socials[k]);
 
@@ -430,7 +455,7 @@ export default function Portfolio() {
           <h2 className="font-display text-2xl font-bold md:text-4xl">Karya</h2>
           <div className="mt-6 flex flex-wrap gap-2">
             {['Semua', ...cats].map((c) => (
-              <button key={c} onClick={() => setFilter(c)} aria-pressed={filter === c} className={filter === c ? 'btn' : 'btn-ghost'}>
+              <button key={c} onClick={() => { setFilter(c); setVisibleCount(5); }} aria-pressed={filter === c} className={filter === c ? 'btn' : 'btn-ghost'}>
                 {c}
               </button>
             ))}
@@ -439,7 +464,7 @@ export default function Portfolio() {
 
         <motion.div layout className="mt-10 grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
-            {works.map((w) => (
+            {visibleWorks.map((w) => (
               <motion.article
                 layout key={w.id}
                 variants={rv} custom={dir} initial="hidden" whileInView="show"
@@ -448,7 +473,14 @@ export default function Portfolio() {
                 transition={{ duration: 0.5, ease }}
                 className="relative min-w-0"
               >
-                <button onClick={() => setViewId(w.id)} className="surface surface-hover group block w-full overflow-hidden rounded-2xl text-left">
+                <button onClick={() => {
+                  setViewId(w.id);
+                  setRecentIds((prev) => {
+                    const next = [w.id, ...prev.filter((id) => id !== w.id)].slice(0, 20);
+                    try { localStorage.setItem('folio:recent', JSON.stringify(next)); } catch {}
+                    return next;
+                  });
+                }} className="surface surface-hover group block w-full overflow-hidden rounded-2xl text-left">
                   <div className="relative aspect-video w-full overflow-hidden">
                     <img src={w.cover} alt={w.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     {(w.videos || []).length > 0 && <span className="absolute bottom-2 left-2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">▶ Video</span>}
@@ -476,6 +508,17 @@ export default function Portfolio() {
           <p className="mt-10 text-fg/55">
             {admin ? 'Belum ada karya di kategori ini. Klik + Tambah Karya.' : 'Belum ada karya di kategori ini.'}
           </p>
+        )}
+
+        {hasMore && (
+          <div className="mt-10 flex justify-center">
+            <button
+              className="btn-ghost px-8 py-3"
+              onClick={() => setVisibleCount((n) => n + LOAD_STEP)}
+            >
+              Tampilkan Lebih Banyak ({works.length - visibleCount} karya lainnya)
+            </button>
+          </div>
         )}
       </main>
 
